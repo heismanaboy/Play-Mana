@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Play Mana</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Play Mana Card — Ace of Spades Challenge</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0a2f1f 0%, #071d12 100%);
+            font-family: 'Segoe UI', 'Poppins', 'Orbitron', system-ui, -apple-system, 'Inter', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* main game container */
+        .game-container {
+            max-width: 650px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            border-radius: 72px 72px 56px 56px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            padding: 20px 24px 32px;
+            transition: all 0.2s;
+            border: 1px solid #ffd966aa;
+        }
+
+        /* header area */
+        .game-header {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F9E0A0, #D4AF37, #FFDF85);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            word-break: keep-all;
+        }
+
+        .sub {
+            color: #b9f6ca;
+            font-weight: 500;
+            font-size: 0.8rem;
+            background: #00000066;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+        }
+
+        /* balance & bank */
+        .wallet-panel {
+            background: #1e2a24e0;
+            border-radius: 48px;
+            padding: 12px 20px;
+            margin: 18px 0 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid #ffdf80aa;
+            backdrop-filter: blur(4px);
+        }
+
+        .balance-box {
+            background: #000000aa;
+            border-radius: 60px;
+            padding: 6px 18px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .balance-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #dddd99;
+        }
+
+        .balance-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #F7E05E;
+            line-height: 1;
+            font-family: 'Monaco', monospace;
+        }
+
+        /* deposit / withdrawal controls */
+        .bank-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .bank-input {
+            background: #0f2120;
+            border: 1px solid #c0b86a;
+            border-radius: 40px;
+            padding: 12px 16px;
+            width: 140px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            color: #FFE6A3;
+            outline: none;
+            font-family: monospace;
+        }
+
+        .bank-btn {
+            background: #2c473a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.1s linear;
+            color: #fae672;
+            box-shadow: 0 2px 5px black;
+            font-family: inherit;
+        }
+
+        .bank-btn:active {
+            transform: scale(0.96);
+        }
+
+        .deposit-btn {
+            background: #2a6230;
+            color: #e9ffdb;
+            border-bottom: 2px solid #96e6a0;
+        }
+
+        .withdraw-btn {
+            background: #6e2c2c;
+            color: #ffcfcf;
+            border-bottom: 2px solid #ff8a7a;
+        }
+
+        /* game info & bet */
+        .bet-area {
+            background: #00000066;
+            border-radius: 56px;
+            padding: 18px;
+            margin: 16px 0;
+            text-align: center;
+        }
+
+        .entry-fee {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #ffdca8;
+            background: #1e2a1d;
+            display: inline-block;
+            padding: 4px 16px;
+            border-radius: 60px;
+        }
+
+        .chance-text {
+            font-size: 0.8rem;
+            margin-top: 6px;
+            color: #cbf5d5;
+        }
+
+        .play-btn {
+            background: radial-gradient(circle at 30% 10%, #f5b042, #bd7a1a);
+            border: none;
+            font-size: 1.6rem;
+            font-weight: bold;
+            padding: 14px 28px;
+            margin-top: 12px;
+            border-radius: 60px;
+            color: #281d06;
+            width: 80%;
+            cursor: pointer;
+            transition: all 0.1s;
+            font-family: inherit;
+            box-shadow: 0 5px 0 #5e3a0e;
+        }
+
+        .play-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #5e3a0e;
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            cursor: not-allowed;
+        }
+
+        /* cards grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(13, 1fr);
+            gap: 6px;
+            margin: 20px 0 12px;
+            background: #0f231ce6;
+            padding: 18px 12px;
+            border-radius: 48px;
+            border: 1px solid #ffdf80;
+        }
+
+        .card {
+            background: #fef7e0;
+            border-radius: 12px;
+            aspect-ratio: 3 / 4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            font-family: 'Segoe UI', 'Georgia', monospace;
+            cursor: pointer;
+            transition: all 0.08s linear;
+            box-shadow: 0 4px 6px black;
+            color: #1e1a0c;
+            transform: scale(1);
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+            background: #fff2cf;
+        }
+
+        .card.selected {
+            background: gold;
+            box-shadow: 0 0 0 2px #ffdd77, 0 0 0 5px #aa7c3c;
+            transform: scale(1.02);
+        }
+
+        .card.revealed-lose {
+            background: #ad5a5a;
+            color: white;
+            filter: grayscale(0.2);
+            cursor: default;
+        }
+
+        .card.revealed-win {
+            background: #5fad42;
+            color: gold;
+            text-shadow: 0 0 2px black;
+            box-shadow: 0 0 10px #adff2f;
+            cursor: default;
+        }
+
+        .card.disabled-card {
+            cursor: not-allowed;
+            opacity: 0.7;
+            filter: grayscale(0.4);
+        }
+
+        /* message panel */
+        .message-area {
+            background: #000000aa;
+            border-radius: 2rem;
+            padding: 12px 16px;
+            margin-top: 16px;
+            text-align: center;
+            font-weight: bold;
+            color: #ffecb3;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .reset-area {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .reset-btn {
+            background: #2d3e42;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            color: #eee;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            margin-top: 18px;
+            color: #bba86a;
+        }
+
+        @media (max-width: 620px) {
+            .cards-grid {
+                grid-template-columns: repeat(8, 1fr);
+                gap: 5px;
+            }
+            .card {
+                font-size: 0.8rem;
+            }
+            .game-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cards-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="game-header">
+        <div class="game-title">🃟 PLAY MANA CARD 🃟</div>
+        <div class="sub">⚡ FIND THE ACE OF SPADES · RISK YOUR MANA ⚡</div>
+    </div>
+
+    <!-- BALANCE & BANKING -->
+    <div class="wallet-panel">
+        <div class="balance-box">
+            <div class="balance-label">💎 MANA BALANCE</div>
+            <div class="balance-value" id="balanceDisplay">0.00</div>
+        </div>
+        <div class="bank-actions">
+            <input type="number" id="bankAmount" class="bank-input" placeholder="Amount" value="10" step="1" min="1">
+            <button id="depositBtn" class="bank-btn deposit-btn">💰 DEPOSIT</button>
+            <button id="withdrawBtn" class="bank-btn withdraw-btn">💸 WITHDRAW</button>
+        </div>
+    </div>
+
+    <!-- GAME RULES & BET -->
+    <div class="bet-area">
+        <div class="entry-fee">🎲 ENTRY FEE: 10 MANA 🎲</div>
+        <div class="chance-text">✨ 1 in 52 chance ✨ Find the Ace of Spades hidden among all cards.<br>
+            If you pick wrong → you lose the entry fee. If you find the Ace → WIN 50x MANA! (500 MANA)</div>
+        <button id="playRoundBtn" class="play-btn">🔮 DRAW THE SPADE 🔮</button>
+    </div>
+
+    <!-- 52 CARD GRID -->
+    <div id="cardsContainer" class="cards-grid"></div>
+
+    <!-- MESSAGE & STATUS -->
+    <div id="messageBox" class="message-area">
+        ⚜️ Deposit mana to start. Each attempt costs 10 mana. Click a card to reveal.
+    </div>
+    <div class="reset-area">
+        <button id="resetGameBtn" class="reset-btn">⟳ NEW SHUFFLE (reset round)</button>
+    </div>
+    <footer>♠️ Ace of Spades is the only winner ♠️ | play responsibly</footer>
+</div>
+
+<script>
+    // ---------- GAME STATE ----------
+    let playerBalance = 0;          // mana currency
+    let currentDeck = [];           // array of 52 card objects { rank, suit, isAceSpades, cardId }
+    let aceSpadesIndex = -1;        // index in currentDeck where Ace of Spades sits
+    let gameActive = false;          // true when a round is active (paid entry, cards not yet picked)
+    let currentRoundCost = 10;       // fixed entry fee
+    let winMultiplier = 50;           // 10 * 50 = 500 mana payout
+    let roundResultResolved = false;  // prevent multiple picks after outcome
+
+    // DOM elements
+    const balanceSpan = document.getElementById('balanceDisplay');
+    const depositBtn = document.getElementById('depositBtn');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const bankAmountInput = document.getElementById('bankAmount');
+    const playRoundBtn = document.getElementById('playRoundBtn');
+    const cardsContainer = document.getElementById('cardsContainer');
+    const messageBox = document.getElementById('messageBox');
+    const resetGameBtn = document.getElementById('resetGameBtn');
+
+    // Helper: update UI balance
+    function updateBalanceUI() {
+        balanceSpan.innerText = playerBalance.toFixed(2);
+    }
+
+    // Show message (colored style? we just add text)
+    function setMessage(msg, isError = false) {
+        messageBox.innerHTML = isError ? `⚠️ ${msg} ⚠️` : `✨ ${msg} ✨`;
+        if (!isError) {
+            // optional positive vibe
+        }
+    }
+
+    // ---------- DECK & SHUFFLE (fresh random order) ----------
+    function buildShuffledDeck() {
+        const suits = ['♠️', '♥️', '♣️', '♦️'];
+        const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+        let deck = [];
+        let id = 0;
+        for (let suit of suits) {
+            for (let rank of ranks) {
+                const isAceSpades = (suit === '♠️' && rank === 'A');
+                deck.push({
+                    id: id++,
+                    rank: rank,
+                    suit: suit,
+                    isAceSpades: isAceSpades,
+                    display: `${rank}${suit}`,
+                    revealed: false,
+                    selectedInCurrentRound: false
+                });
+            }
+        }
+        // Fisher-Yates shuffle
+        for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+        }
+        // after shuffle, assign new ids + locate ace spades index
+        deck.forEach((card, idx) => {
+            card.id = idx;
+            if (card.isAceSpades) aceSpadesIndex = idx;
+        });
+        return deck;
+    }
+
+    // Render card grid based on currentDeck, gameActive flags & round resolved state
+    function renderCards() {
+        if (!currentDeck.length) return;
+        cardsContainer.innerHTML = '';
+        for (let i = 0; i < currentDeck.length; i++) {
+            const card = currentDeck[i];
+            const cardDiv = document.createElement('div');
+            cardDiv.classList.add('card');
+
+            // Determine styling based on revealed state & if the round is resolved
+            // During active round (gameActive = true and roundResultResolved = false) we show face-down ? or hidden ?
+            // Actually we want to hide card value until clicked. But we want to show placeholder "?"
+            // If card is revealed (after click) we show real symbol.
+            // If game is inactive (no active round), we show all cards face-down with "?" unless they were revealed from previous round? We'll reset on new round
+            // For simplicity: when round is inactive (no active game), all cards show '?' and are disabled.
+            // When gameActive true & round not resolved yet -> unrevealed cards show '?', revealed shows content, winner card gets special style.
+            // after round finishes (win/lose) we disable all clicks, show final state until reset/new round.
+            let displayText = '';
+            let additionalClass = '';
+            let clickEnabled = false;
+
+            const isRoundActive = gameActive && !roundResultResolved;
+            const isRoundFinishedButRevealed = (!gameActive) || (roundResultResolved === true && card.revealed);
+
+            if (card.revealed) {
+                // already revealed because user clicked earlier
+                displayText = card.display;
+                if (card.isAceSpades) {
+                    additionalClass = 'revealed-win';
+                } else {
+                    additionalClass = 'revealed-lose';
+                }
+                clickEnabled = false;
+            } 
+            else {
+                // not revealed yet
+                if (isRoundActive) {
+                    // round active and not yet clicked: show hidden card symbol ?
+                    displayText = '?';
+                    additionalClass = '';
+                    clickEnabled = true;   // can be clicked only if round active & not resolved & balance already deducted
+                } else {
+                    // either no active round or round resolved (ended) -> show hidden "?" but disabled
+                    displayText = '?';
+                    additionalClass = 'disabled-card';
+                    clickEnabled = false;
+                }
+            }
+
+            // Additional disabled if roundResultResolved true (game still active flag may be true but resolved)
+            if (roundResultResolved && gameActive) {
+                clickEnabled = false;
+                if (!card.revealed) {
+                    displayText = '?';
+                    additionalClass = 'disabled-card';
+                }
+            }
+
+            cardDiv.innerText = displayText;
+            if (additionalClass) cardDiv.classList.add(additionalClass);
+            if (card.isAceSpades && card.revealed) cardDiv.classList.add('revealed-win');
+            if (!card.isAceSpades && card.revealed) cardDiv.classList.add('revealed-lose');
+            
+            if (clickEnabled) {
+                cardDiv.style.cursor = 'pointer';
+                cardDiv.addEventListener('click', (function(idx) {
+                    return function() { onCardClick(idx); };
+                })(i));
+            } else {
+                cardDiv.style.cursor = 'not-allowed';
+            }
+            cardsContainer.appendChild(cardDiv);
+        }
+    }
+
+    // handle card pick
+    function onCardClick(clickedIdx) {
+        // validation: game must be active, round not resolved, balance already deducted when round started
+        if (!gameActive) {
+            setMessage("No active round! Press 'DRAW THE SPADE' to start a new round (cost 10 mana).", true);
+            return;
+        }
+        if (roundResultResolved) {
+            setMessage("This round is already finished. Press 'NEW SHUFFLE' or start a fresh round.", true);
+            return;
+        }
+        const card = currentDeck[clickedIdx];
+        if (card.revealed) {
+            setMessage("Card already revealed! Choose another unrevealed card.", true);
+            return;
+        }
+        // REVEAL THIS CARD
+        card.revealed = true;
+        const isWin = card.isAceSpades;
+
+        if (isWin) {
+            // WIN scenario: prize = entry * 50 = 10*50 = 500
+            const winAmount = currentRoundCost * winMultiplier; // 500
+            playerBalance += winAmount;
+            updateBalanceUI();
+            setMessage(`🔥✨ AMAZING! You found the ACE OF SPADES! ✨🔥 You win ${winAmount} MANA! New balance: ${playerBalance.toFixed(2)}`);
+            roundResultResolved = true;
+            gameActive = false;  // round ends
+            renderCards();
+            // disable further picks
+        } else {
+            // LOSE scenario: entry fee already deducted when round started, so just lose the money
+            setMessage(`❌ Ouch! You revealed ${card.display} ... Not the Ace of Spades. You lost 10 MANA. Better luck next time! ❌`, false);
+            roundResultResolved = true;
+            gameActive = false;
+            renderCards();
+        }
+        // in both cases, no further picks allowed for this round
+    }
+
+    // Start a new round: deduct 10 mana, shuffle fresh deck (reset all reveals), set gameActive=true, roundResultResolved=false
+    function attemptStartRound() {
+        // check if there's an active unresolved round
+        if (gameActive && !roundResultResolved) {
+            setMessage("A round is already in progress! Pick a card or reset the round.", true);
+            return false;
+        }
+        // check balance for entry fee
+        if (playerBalance < currentRoundCost) {
+            setMessage(`Insufficient Mana! Need ${currentRoundCost} MANA. Deposit some mana.`, true);
+            return false;
+        }
+        // deduct fee
+        playerBalance -= currentRoundCost;
+        updateBalanceUI();
+        // Generate completely new shuffled deck
+        currentDeck = buildShuffledDeck();
+        // reset revealed flags for all cards
+        for (let i = 0; i < currentDeck.length; i++) {
+            currentDeck[i].revealed = false;
+        }
+        gameActive = true;
+        roundResultResolved = false;
+        // re-render cards face-down
+        renderCards();
+        setMessage(`🃟 Round started! 10 MANA paid. Find the Ace of Spades among 52 cards. Pick any card! 🃟`, false);
+        return true;
+    }
+
+    // reset the current round (manually without penalty, but does not refund entry fee if active)
+    // this will shuffle deck, reset reveals but game remains active? But we should reset state while gameActive maybe, but to be consistent: 
+    // reset will cancel current round (no refund), reset all cards and reactivate same state without additional fee deduction?
+    // Design: "NEW SHUFFLE (reset round)" will cancel current active round if any (no refund) but reshuffle and keep same gameActive flag, but we must not charge again. But we'll handle by checking if gameActive true but round unresolved: we discard old round without refund, reshuffle and start new round but we already paid the fee. So we must treat carefully.
+    // Better: On reset, if game active and not resolved -> just reshuffle deck, keep game active but refund? NO, fee already paid, reshuffle still lets player play using same paid entry.
+    // So reset should: if gameActive true and !roundResultResolved, reshuffle cards, reset all reveals but keep the SAME round (no extra fee), also ace spades index new. This is user-friendly.
+    // If no active round or round finished, reset does nothing? but we can allow fresh start only if there is an active round that isn't resolved? more consistent:
+    function resetRoundShuffle() {
+        if (!gameActive || roundResultResolved) {
+            // No active round in progress that's unresolved: either no game or already finished.
+            setMessage("No active round to shuffle. Press 'DRAW THE SPADE' to begin a new round (cost 10 mana).", true);
+            return;
+        }
+        // active and unresolved round: reshuffle remaining unrevealed cards? but we must preserve the entry fee deduction? yes.
+        // We'll rebuild deck entirely but keep gameActive state, but careful: we must not allow manipulating previous revealed cards. we just reset entire deck, keep current player's paid status,
+        // but all cards become unrevealed, Ace relocated. That's valid: a full reshuffle of remaining deck (or full redeal) - user can try again with same entry.
+        for (let i = 0; i < currentDeck.length; i++) {
+            if (currentDeck[i].revealed) {
+                // but we are completely rebuilding deck, we lose history. This is a total reshuffle. since no win/loss occurred yet, it's fair: we reset game.
+            }
+        }
+        // Build brand new deck
+        currentDeck = buildShuffledDeck();
+        for (let i=0;i<currentDeck.length;i++) currentDeck[i].revealed = false;
+        roundResultResolved = false;
+        // gameActive remains true
+        renderCards();
+        setMessage("🔄 Deck reshuffled! The Ace of Spades has moved. Keep searching, no extra cost. 🔄", false);
+    }
+
+    // Deposit & withdrawal logic
+    function deposit(amount) {
+        if (isNaN(amount) || amount <= 0) {
+            setMessage("Enter a valid positive deposit amount.", true);
+            return false;
+        }
+        playerBalance += amount;
+        updateBalanceUI();
+        setMessage(`Deposited ${amount} MANA. New balance: ${playerBalance.toFixed(2)}`, false);
+        return true;
+    }
+
+    function withdraw(amount) {
+        if (isNaN(amount) || amount <= 0) {
+            setMessage("Withdrawal amount must be positive.", true);
+            return false;
+        }
+        if (amount > playerBalance) {
+            setMessage(`Insufficient balance to withdraw ${amount}. Your balance: ${playerBalance.toFixed(2)}`, true);
+            return false;
+        }
+        playerBalance -= amount;
+        updateBalanceUI();
+        setMessage(`💸 Withdrew ${amount} MANA. Remaining balance: ${playerBalance.toFixed(2)}`, false);
+        return true;
+    }
+
+    // initial setup: default zero balance + initial deck display disabled
+    function initGame() {
+        playerBalance = 0;
+        updateBalanceUI();
+        // build placeholder deck (shuffled but unrevealed, gameActive false)
+        currentDeck = buildShuffledDeck();
+        for (let i=0;i<currentDeck.length;i++) currentDeck[i].revealed = false;
+        gameActive = false;
+        roundResultResolved = false;
+        renderCards();
+        setMessage("⚜️ Welcome to Play Mana Card! Deposit mana to start. Entry fee 10 mana. Find ♠️A to win 500 mana! ⚜️", false);
+    }
+
+    // Event Listeners
+    depositBtn.addEventListener('click', () => {
+        let amount = parseFloat(bankAmountInput.value);
+        if (isNaN(amount)) amount = 0;
+        deposit(amount);
+        bankAmountInput.value = '';
+    });
+
+    withdrawBtn.addEventListener('click', () => {
+        let amount = parseFloat(bankAmountInput.value);
+        if (isNaN(amount)) amount = 0;
+        withdraw(amount);
+        bankAmountInput.value = '';
+    });
+
+    playRoundBtn.addEventListener('click', () => {
+        attemptStartRound();
+    });
+
+    resetGameBtn.addEventListener('click', () => {
+        if (gameActive && !roundResultResolved) {
+            resetRoundShuffle();
+        } else {
+            // if round is finished/inactive, we optionally force fresh reset but to avoid confusion: just show message
+            setMessage("No ongoing round to shuffle. Start a new game round using 'DRAW THE SPADE'", true);
+        }
+    });
+
+    // start initial
+    initGame();
+</script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
